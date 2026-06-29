@@ -18,7 +18,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     setLoading(true);
 
     try {
-      const baseUrl = 'http://localhost:8000';
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
       if (isLogin) {
         // Form-data request for FastAPI OAuth2PasswordRequestForm
         const params = new URLSearchParams();

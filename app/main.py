@@ -13,6 +13,7 @@ from pydantic import BaseModel, EmailStr
 from pypdf import PdfReader
 from sqlalchemy.orm import Session
 
+from app.config import config
 from app.database import engine, Base, get_db, SessionLocal
 from app.models import User, Job, Resume
 from app.auth import get_password_hash, verify_password, create_access_token, get_current_user
@@ -99,7 +100,7 @@ def read_users_me(current_user: User = Depends(get_current_user)):
 @app.get("/api/ollama/models")
 async def get_ollama_models():
     """Fetch list of local Ollama models."""
-    url = "http://localhost:11434/api/tags"
+    url = f"{config.ollama.base_url}/api/tags"
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(url, timeout=5.0)
@@ -122,7 +123,7 @@ async def pull_model_task(model_name: str):
         "error": None
     }
     
-    url = "http://localhost:11434/api/pull"
+    url = f"{config.ollama.base_url}/api/pull"
     payload = {"name": model_name}
     
     try:
@@ -451,3 +452,13 @@ async def stream_job_progress(
             tracker.unsubscribe(q)
             
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "app.main:app",
+        host=config.backend.host,
+        port=config.backend.port,
+        reload=config.backend.reload,
+    )

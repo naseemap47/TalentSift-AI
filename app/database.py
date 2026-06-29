@@ -1,19 +1,18 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:///./talentsift.db"
+from app.config import config
 
-# Create the SQLite engine
+# Database URL is driven by config.yaml → database.url
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
+    config.database.url,
+    connect_args={"check_same_thread": False},  # Required for SQLite
 )
 
-# Create sessionmaker
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Declarative base
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()

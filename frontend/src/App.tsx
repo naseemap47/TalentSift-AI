@@ -16,7 +16,7 @@ function App() {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const baseUrl = 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
   const checkAuth = async () => {
     const token = localStorage.getItem('talentsift_token');

@@ -4,6 +4,7 @@ from typing import List, Dict, Any, TypedDict
 from langchain_ollama import ChatOllama
 from langgraph.graph import StateGraph, END
 
+from app.config import config
 from app.database import SessionLocal
 from app.models import Job, Resume
 from app.jobs_manager import get_tracker
@@ -59,7 +60,12 @@ def filter_node(state: AgentState) -> Dict[str, Any]:
 
     # Initialize model
     try:
-        llm = ChatOllama(model=state["filter_model"], temperature=0.0, format="json")
+        llm = ChatOllama(
+            model=state["filter_model"],
+            temperature=0.0,
+            format="json",
+            base_url=config.ollama.base_url,
+        )
     except Exception as e:
         error_msg = f"Failed to initialize Ollama filter model '{state['filter_model']}': {str(e)}"
         tracker.add_log(error_msg)
@@ -137,7 +143,12 @@ def scorer_node(state: AgentState) -> Dict[str, Any]:
 
     # Initialize model
     try:
-        llm = ChatOllama(model=state["scorer_model"], temperature=0.1, format="json")
+        llm = ChatOllama(
+            model=state["scorer_model"],
+            temperature=0.1,
+            format="json",
+            base_url=config.ollama.base_url,
+        )
     except Exception as e:
         error_msg = f"Failed to initialize Ollama scorer model '{state['scorer_model']}': {str(e)}"
         tracker.add_log(error_msg)
@@ -216,7 +227,12 @@ def ranker_node(state: AgentState) -> Dict[str, Any]:
 
     # Initialize model
     try:
-        llm = ChatOllama(model=state["ranker_model"], temperature=0.1, format="json")
+        llm = ChatOllama(
+            model=state["ranker_model"],
+            temperature=0.1,
+            format="json",
+            base_url=config.ollama.base_url,
+        )
     except Exception as e:
         error_msg = f"Failed to initialize Ollama ranker model '{state['ranker_model']}': {str(e)}"
         tracker.add_log(error_msg)

@@ -64,7 +64,7 @@ export const JobView: React.FC<JobViewProps> = ({ jobId, onBackToDashboard }) =>
   const logsEndRef = useRef<HTMLDivElement | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
 
-  const baseUrl = 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
   const token = localStorage.getItem('talentsift_token') || '';
 
   // Scroll logs terminal to bottom

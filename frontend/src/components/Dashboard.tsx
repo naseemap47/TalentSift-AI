@@ -50,7 +50,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onStartJob, onViewJob, onL
   const [pastJobs, setPastJobs] = useState<PastJob[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(false);
 
-  const baseUrl = 'http://localhost:8000';
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
   const token = localStorage.getItem('talentsift_token') || '';
 
   // Fetch Ollama models

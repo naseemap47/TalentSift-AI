@@ -1,0 +1,28 @@
+# ============================================================
+# TalentSift-AI — Central Configuration File
+# ============================================================
+# All backend and frontend settings live here.
+# Backend reads this via app/config.py
+# Frontend reads this via vite.config.ts (using js-yaml)
+# ============================================================
+
+backend:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  debug: false
+
+database:
+  url: "sqlite:///./talentsift.db"
+
+security:
+  secret_key: "talentsift_super_secret_encryption_key_for_jwt_tokens"
+  algorithm: "HS256"
+  access_token_expire_minutes: 1440   # 24 hours
+
+ollama:
+  base_url: "http://localhost:11434"
+
+frontend:
+  port: 5173
+  api_base_url: "http://localhost:8000"
