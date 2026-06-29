@@ -65,6 +65,8 @@ TalentSift-AI automates the resume shortlisting pipeline through a 3-stage agent
 
 ## Setup & Running
 
+All components (ports, host addresses, database URLs, security keys, and frontend base URLs) are centrally configured in `config.yaml` at the root of the project.
+
 ### 1. Backend (FastAPI)
 
 ```bash
@@ -74,11 +76,11 @@ cd TalentSift-AI
 # Install Python dependencies with uv
 uv sync
 
-# Start the FastAPI development server
-uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# Start the FastAPI development server using the configured python -m entrypoint
+uv run python -m app.main
 ```
 
-The API will be live at: **http://localhost:8000**  
+The API will be live at: **http://localhost:8000** (or as configured in `config.yaml`)  
 API docs (Swagger): **http://localhost:8000/docs**
 
 ### 2. Frontend (React + Vite)
@@ -93,7 +95,8 @@ npm install
 npm run dev
 ```
 
-The UI will be live at: **http://localhost:5173**
+Vite reads `config.yaml` dynamically on startup, configuring its server port and pointing to the backend.  
+The UI will be live at: **http://localhost:5173** (or as configured in `config.yaml`)
 
 ---
 
@@ -104,15 +107,17 @@ TalentSift-AI/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py            # FastAPI entry point – all routes & SSE
-│   ├── database.py        # SQLAlchemy engine + session
+│   ├── config.py          # Centralized configuration YAML parser
+│   ├── database.py        # SQLAlchemy engine + session (from config)
 │   ├── models.py          # SQLAlchemy ORM models (User, Job, Resume)
-│   ├── auth.py            # JWT + bcrypt helpers
+│   ├── auth.py            # JWT + bcrypt helpers (from config)
 │   ├── jobs_manager.py    # In-memory SSE progress tracker
 │   └── agents/
 │       ├── __init__.py
-│       └── graph.py       # LangGraph 3-node pipeline
+│       └── graph.py       # LangGraph 3-node pipeline (Ollama url from config)
 ├── frontend/
 │   ├── index.html
+│   ├── vite.config.ts     # Dynamically parses config.yaml on start
 │   └── src/
 │       ├── App.tsx         # Root router & auth state
 │       ├── index.css       # Premium dark theme CSS
@@ -120,7 +125,8 @@ TalentSift-AI/
 │           ├── Auth.tsx     # Login + Signup form
 │           ├── Dashboard.tsx # Job creation + model config + history
 │           └── JobView.tsx   # SSE live feed + tabbed result view
-├── pyproject.toml          # uv/Python deps
+├── config.yaml            # Centralized project configuration
+├── pyproject.toml          # uv/Python deps and run script mappings
 └── talentsift.db           # SQLite database (auto-created on first run)
 ```
 
